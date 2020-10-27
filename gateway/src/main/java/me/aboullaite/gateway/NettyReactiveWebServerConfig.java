@@ -45,12 +45,23 @@ public class NettyReactiveWebServerConfig implements WebServerFactoryCustomizer<
 
             if (ipHeader != null) {
                 String[] ips = ipHeader.split(",");
-                InetSocketAddress remoteAddress = InetSocketAddressUtil.parseAddress(ips[ips.length - 1].trim(),
+                String ip = ips[ips.length - 1].trim();
+
+                // If the IP address is internal, we will skip it and extract the previous one.
+                if (ips.length >= 2 && isInternal(ip)) {
+                    ip = ips[ips.length - 2].trim();
+                }
+
+                InetSocketAddress remoteAddress = InetSocketAddressUtil.parseAddress(ip,
                         connectionInfo.getRemoteAddress().getPort());
                 connectionInfo = connectionInfo.withRemoteAddress(remoteAddress);
             }
 
             return connectionInfo;
+        }
+
+        private boolean isInternal(String ip) {
+            return ip.startsWith("10.");
         }
     }
 }

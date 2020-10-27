@@ -19,7 +19,7 @@ public class RemoteAddressController {
     @GetMapping("/remote_address")
     public String getRemoteAddress(ServerHttpRequest request) {
         return String.format("X-Forwarded-For: %s\n" +
-                        "getRemoteAddress returns %s",
+                        "getRemoteAddress() returns %s",
                 request.getHeaders().get("X-Forwarded-For"),
                 request.getRemoteAddress()
         );
